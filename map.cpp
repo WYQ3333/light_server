@@ -28,6 +28,29 @@ int main()
         cout << e.first << "--->";
         cout << e.second << std::endl;
     }
+
+    cout << "insert operator :" << endl;
+    m.insert(pair<string,string>("xigua", "西瓜"));
+    for(auto e : m){
+        cout << e.first << "--->";
+        cout << e.second << std::endl;
+    }
+    
+    m["haha"] = "hahah";
+    cout << "[]操作哦" << endl;
+    for(auto e : m){
+        cout << e.first << "--->";
+        cout << e.second << std::endl;
+    }
+    
+    m.erase("haha");
+    cout << "erase haha " << endl;
+    for(auto e : m){
+        cout << e.first << "--->";
+        cout << e.second << std::endl;
+    }
+
+
     return 0;
 }
 
