@@ -4,6 +4,7 @@
 #include<vector>
 #include<stdio.h>
 #include<errno.h>
+#include<algorithm>
 
 template<class T>
 struct BTreeNode{
@@ -24,7 +25,7 @@ public:
     BTree() 
         :_pRoot(nullptr)
     {}
-
+public:
     BTreeNode<T>* CreateBTree_string(std::string Pre, std::string Ino){
         if(Pre.empty()&&Ino.empty()){
             return nullptr;
@@ -54,13 +55,55 @@ public:
         _pRoot = CreateBTree_string(Pre, Ino);
     }
 
+public:
+    std::vector<T> Split_vector_Pre(int split_begin, std::vector<T> Pre, int index){
+        std::vector<T> temp;
+        for(size_t i = 1; i <= index; ++i){
+            temp.push_back(Pre[split_begin++]);
+        }
+        return temp;
+    }
+    std::vector<T> Split_vector_Ino(int split_begin, std::vector<T> Ino, int index){
+        std::vector<T> temp;
+        for(size_t i = 0; i < index; ++i){
+            temp.push_back(Ino[split_begin++]);
+        }
+        return temp;
+    }
+    BTreeNode<T>* CreateBTree_vector(std::vector<T> Pre, std::vector<T> Ino){
+        if(Pre.empty()&&Ino.empty()){
+            return nullptr;
+        }
+        BTreeNode<T>* pRoot = new BTreeNode<T>(Pre[0]);
+        if(pRoot == nullptr){
+            perror("new BTreeNode failure!!!");
+            return nullptr;
+        }
+        int index = 0;
+        auto Iter = find(Ino.begin(), Ino.end(), Pre[0]);
+        index = Iter - Ino.begin();
+        std::vector<T> str_left_Pre = Split_vector_Pre(1, Pre, index);
+        std::vector<T> str_left_Ino = Split_vector_Ino(0, Ino, index);
+        if(!str_left_Pre.empty() && !str_left_Ino.empty() && str_left_Pre.size() == str_left_Ino.size()){
+            pRoot->_pLeft = CreateBTree_vector(str_left_Pre, str_left_Ino);
+        }
+        std::vector<T> str_right_Pre = Split_vector_Pre(str_left_Ino.size() + 1, Pre, Ino.size()-(str_left_Ino.size()+1));
+        std::vector<T> str_right_Ino = Split_vector_Ino(str_left_Ino.size() + 1, Ino, Ino.size()-(str_left_Ino.size()+1));
+        if(!str_right_Pre.empty() && !str_right_Ino.empty() && str_right_Pre.size() == str_right_Ino.size()){
+            pRoot->_pRight = CreateBTree_vector(str_right_Pre, str_right_Ino);
+        }
+        return pRoot;
+    }
+
     void CreateBTree(std::vector<T> Pre, std::vector<T> Ino){
         if(Pre.size()!= Ino.size()){
             perror("BTree pre not equal Ino: !!!");
             return;
         }
+        _pRoot = CreateBTree_vector(Pre, Ino);
     }
 
+public:
     void _destoryBT(BTreeNode<T>* pRoot){
         if(pRoot == nullptr){
             return;
