@@ -92,48 +92,74 @@ public:
         pBSTNode pParent = _pRoot;
         pBSTNode pCur = _pRoot;
         while(pCur){
-            pParent = pCur;
-            if(data < pCur->_data){
+            if(pCur->_data == data){
+                break;
+            }
+            else if(data < pCur->_data){
+                pParent = pCur;
                 pCur = pCur->_pLeft;
             }
-            else if(data > pCur->_data){
+            else{
+                pParent = pCur;
                 pCur = pCur->_pRight;
-            }
-            else if(data == pCur->_data){
-                break;
             }
         }
         if(pCur != nullptr){
-            if(pCur->_pRight == nullptr){
-                //only have pLeft;
-                if(pCur->_pLeft == nullptr){
-                    pParent->_pLeft = nullptr;
-                    delete pCur;
-                    pCur = nullptr;
-                }
-                else
-                    pParent->_pLeft = pCur->_pLeft;
-            }
             if(pCur->_pLeft == nullptr){
-                //only have pRight;
+                //only have _pRight;
                 if(pCur->_pRight == nullptr){
-                    delete pCur;
-                    pCur = nullptr;
+                    //erase root
+                    if(pCur == pParent->_pLeft){
+                        pParent->_pLeft = nullptr;
+                    }
+                    else if(pCur == pParent->_pRight){
+                        pParent->_pRight = nullptr;
+                    }
                 }
-                else
-                    pParent->_pRight = pCur->_pRight;
+                else{
+                    if(pCur == pParent->_pLeft){
+                        pParent->_pLeft = pCur->_pRight;
+                    }
+                    else if(pCur == pParent->_pRight){
+                        pParent->_pRight = pCur->_pRight;
+                    }
+                }
+                delete pCur;
+                pCur = nullptr;
+
             }
-            if(pCur->_pLeft && pCur->_pRight){
-                pBSTNode pLchild = pCur->_pRight;
-                pBSTNode pLchildpar = nullptr;
-                while(pLchild->_pLeft){
-                    pLchildpar = pLchild;
-                    pLchild = pLchild->_pLeft;
+            else if(pCur->_pRight == nullptr){
+                //only have _pLeft
+                if(pCur == pParent->_pLeft){
+                    pParent->_pLeft = pCur->_pLeft;
                 }
-                pCur->_data = pLchild->_data;
-                pLchildpar->_pLeft == nullptr;
-                delete pLchild;
-                pLchild = nullptr;
+                else if (pCur == pParent->_pRight){
+                    pParent->_pRight = pCur->_pLeft;
+                }
+                else{
+                    pParent = nullptr;
+                }
+                delete pCur;
+                pCur = nullptr;
+            }
+            else if(pCur->_pLeft && pCur->_pRight){
+                //have _pLeft && have _pRight;
+                pBSTNode pCurRch = pCur->_pRight;
+                pBSTNode pCurRchPar = pCur;
+                if(pCurRch->_pLeft == nullptr){
+                    pCur->_data = pCurRch->_data;
+                    pCur->_pRight = pCurRch->_pRight;
+                }
+                else{
+                    while(pCurRch->_pLeft){
+                        pCurRchPar = pCurRch;
+                        pCurRch = pCurRch->_pLeft;
+                    }
+                    pCur->_data = pCurRch->_data;
+                    pCurRchPar->_pLeft = nullptr;
+                } 
+                delete pCurRch;
+                pCurRch = nullptr;  
             }
         }
         else{
@@ -147,11 +173,12 @@ public:
     }
 
     void _Inorder(pBSTNode pRoot){
-        if(pRoot){
-            _Inorder(pRoot->_pLeft);
-            std::cout << pRoot->_data << " ";
-            _Inorder(pRoot->_pRight);
+        if(pRoot == nullptr){
+            return;
         }
+        _Inorder(pRoot->_pLeft);
+        std::cout << pRoot->_data << " ";
+        _Inorder(pRoot->_pRight);
     }
 
     void Inorder(){
