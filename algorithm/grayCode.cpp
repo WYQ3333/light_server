@@ -33,7 +33,7 @@ public:
     }
 };
 
-class Solution{
+class Solution_stack{
 public:
     int n_n(int n){
         if(n == 1){
@@ -74,6 +74,22 @@ public:
     }
 };
 
+class Solution{
+public:
+    std::vector<int> grayCode(int n){
+        int size = 1 << n;
+        std::vector<int> array;
+        if(n == 0){
+            array.push_back(0);
+            return array;
+        }
+        for(int i = 0; i < size; ++i){
+            int temp = i^(i >> 1);
+            array.push_back(temp);
+        }
+        return array;
+    }
+};
 int main()
 {
     Solution s;
