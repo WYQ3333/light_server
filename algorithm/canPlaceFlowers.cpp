@@ -49,6 +49,56 @@ public:
         }
     }
 };
+
+class Solution{
+public:
+    vector<vector<int>> threeSum(vector<int>& array){
+        if(array.size() < 3){
+            return {};
+        }
+        sort(array.begin(), array.end());
+        if(array[0] > 0 || array[array.size() - 1] < 0){
+            return {};
+        }
+        vector<vector<int>> result;
+        for(size_t i = 0; i < array.size(); ++i){
+            int fix = array[i];
+            if(fix > 0){
+                break;
+            }
+            if(i>0 && fix==array[i-1])    continue;
+            int left = i + 1;
+            int right = array.size() - 1;
+            while(left < right){
+                if(array[left] + array[right] == -fix){
+                    if(left == i + 1 || right == array.size() - 1){
+                        result.push_back(vector<int> {array[i], array[left], array[right]});
+                        left++;
+                        right--;
+                    }
+                    else if(array[left] == array[left - 1]){
+                        left++;
+                    }
+                    else if(array[right] == array[right + 1]){
+                        right--;
+                    }
+                    else{
+                        result.push_back(vector<int> {array[i], array[left], array[right]});
+                        left++;
+                        right--;
+                    }
+                }
+                else if(array[left] + array[right] < -fix){
+                    left++;
+                }
+                else{
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+};
 int main()
 {
     Solution s;
