@@ -44,6 +44,35 @@ public:
         return result;
     }
 };
+class Solution {//c++ beats 96%
+public:
+    struct node {
+        int val;
+        int cnt;
+        node(int value,int count) {
+            val = value;
+            cnt = count;
+        }
+    };
+    int cnt,max_val,first;
+    vector<int> res;
+    vector<node> v;
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        sort(nums.begin(),nums.end());
+        for(int i=0;i<nums.size();) {
+            first = nums[i];cnt=0;
+            while(i<nums.size()&&nums[i]==first) i++,cnt++;
+            v.push_back(node(first,cnt));
+        }
+        sort(v.begin(),v.end(),cmp);
+        for(int i=0;i<k;i++) res.push_back(v[i].val);
+        return res;
+    }
+    static bool cmp(const node& a, const node& b) {
+        return a.cnt > b.cnt;
+    }
+   
+};
 int main()
 {
     Solution s;
