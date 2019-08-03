@@ -17,7 +17,7 @@ public:
         //如果right 小于 mid, 则说明最小值肯定在mid的后面或者是mid本身 left = mid
         //如果right 大于mid，则说明最小值在mid的前面或者是mid本身 right = mid;
         //如果right == mid, 另right--,因为非递减中值有可能相等
-        while(rotateArray[left] >= rotateArray[right]){
+        while(left <= right && rotateArray[left] >= rotateArray[right]){
             int mid = left + (right - left)/2;
             if(rotateArray[right] < rotateArray[mid]){
                 left = mid;
@@ -43,6 +43,9 @@ public:
 
 int main()
 {
+    vector<int> array = {1};
+    Solution s;
+    cout << s.minNumberInRotateArray(array) << endl;
     return 0;
 }
 
