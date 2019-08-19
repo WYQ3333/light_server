@@ -33,6 +33,22 @@ public:
         return result[0];
     }
 };
+class Solution1{
+public:
+    static bool cmp(int a, int b){
+        string str1 = to_string(a) + to_string(b);
+        string str2 = to_string(b) + to_string(a);
+        return str1 < str2;
+    }
+    string PrintMinNumber(vector<int> numbers){
+        sort(numbers.begin(), numbers.end(), cmp);
+        string result;
+        for(size_t i = 0; i < numbers.size(); ++i){
+            result += to_string(numbers[i]);
+        }
+        return result;
+    }
+};
 int main()
 {
     Solution s;
