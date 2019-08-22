@@ -74,6 +74,51 @@ public:
 
 };
 
+class Solution2 {
+public:
+    bool isNumeric(char* string)
+    {
+        if(string==NULL)
+            return false;
+        if(*string=='+'||*string=='-')
+            string++;
+        if(*string=='\0')
+            return false;
+        int dot=0,num=0,nume=0;//分别用来标记小数点、整数部分和e指数是否存在
+        while(*string!='\0'){
+            if(*string>='0'&&*string<='9')
+            {  
+                string++;
+                num=1;
+            }
+            else if(*string=='.'){
+                if(dot>0||nume>0)
+                    return false;
+                string++;
+                dot=1;
+            }
+            else if(*string=='e'||*string=='E')
+                {
+                  if(num==0||nume>0)
+                      return false;
+                  string++;
+                  nume++;
+                  if(*string=='+'||*string=='-')
+                      string++;
+                 if(*string=='\0')
+                     return false;
+                }
+            else
+                return false;
+        }
+        return true;
+    }
+ 
+};
+//注意表示数值的字符串遵循的规则；
+//在数值之前可能有一个“+”或“-”，接下来是0到9的数位表示数值的整数部分，如果数值是一个小数，那么小数点后面可能会有若干个0到9的数位
+//表示数值的小数部分。如果用科学计数法表示，接下来是一个‘e’或者‘E’，以及紧跟着一个整数（可以有正负号）表示指数。
+
 int main()
 {
     Solution s;
